@@ -1,68 +1,45 @@
-package chatBox;
+package chatbot;
 
-import java.util.Scanner;
-
-public class ChatbotAchilles implements Topic {
-	public static final Chatbot chatbot = new Chatbot();
-	private static Scanner inputSource = new Scanner(System.in);
+public class ChatbotAchilles implements Topic{
 	
-	public static void main(String[] args) {
-		chatbot.startChatting();
+	private String[] keywords;
+	private String goodbyeKeyword;
+	private String secretKeyword;
+	private String response;
+	
+	public ChatbotAchilles() {
+		String[] temp = {"stuff", "things", "whatever", "nothing"};
+		keywords = temp;
+		goodbyeKeyword = "bye";
+		secretKeyword = "pug";
+		response = "";
+		
 	}
-}
-
-//Copied from class notes Utility class
-/**
- * 
- * @param seachString
- * @param keyword
- * @param startPsn
- * @return the index of the keyword after startPsn that is isolated and has no negations or -1 otherwise
- */
-public static int findKeyword(String seachString, String keyword, int startPsn) {
-	//make lowercase
-	searchString = searchString.toLowerCase();
-	keyword = keyword.toLowerCase();
 	
-	int psn = searchString.indexOf(keyword, startPsn);
-	
-	while(psn >= 0) {
-		if(keywordIsIsolated(psn, keyword, searchString) && noNegations(searchString, psn)) {
-			return psn;
-		}else {
-			psn = searchString.indexOf(keyword, psn+1);//returns the index of the NEXT keyword
+	public void talk(String response) {
+		ChatbotMain.print("Hey! So you want to talk about generic boring things, huh? I love talking about that.");
+		response = ChatbotMain.getInput();
+		while(!response.equals(goodbyeKeyword)) {
+			if(ChatbotMain.findKeyword(response, secretKeyword, 0)) {
+				ChatbotMain.print("I can't even. I love pugs so much. Wow. You are so cool.");
+				response = ChatbotMain.getInput();
+			}else {
+				ChatbotMain.print("Yeah. That's pretty cool. But there are things I like even more. Tell me something else");
+				response = ChatbotMain.getInput();
+			}
 		}
+		//access variables from other classes
+		ChatbotMain.print("Well, it was nice talking to you, " +ChatbotMain.chatbot.getUsername()+"!");
+		ChatbotMain.chatbot.getAchilles().talk("");
 	}
-	return -1;
-}
-
-
-public static boolean keywordIsIsolated(int psn, String keyword, String s) {
-	return true;
-}
-
-public static boolean noNegations(String s, int psn) {
-	return true;
-}
-
-public static String getInput() {
-	return inputSource.nextLine();
-}
-
-public static void print(String s) {
-	multiLinePrint(s);
-}
-
-
-@Override
-public void talk(String response) {
-	// TODO Auto-generated method stub
 	
-}
-
-
-@Override
-public boolean isTriggered(string repsonse) {
-	// TODO Auto-generated method stub
-	return false;
+	public boolean isTriggered(String response) {
+		for(int i = 0; i < keywords.length; i++) {
+			//IMPORTANT(on the rubric)
+			if(ChatbotMain.findKeyword(response, keywords[i], 0)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
